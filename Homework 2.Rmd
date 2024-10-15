@@ -1,0 +1,47 @@
+---
+---
+---
+
+1.  Which country had the highest number of new leprosy cases in 2022? Why is it not a fair comparison to look at the raw number of cases when comparing prevalence of the disease across different countries?
+
+    ```{r}
+    lep <- read.csv('Homework2_leprosy.csv')
+    summary(lep)
+    which.max(lep$New_Cases)
+    lep[76,]
+    #We find that the country with the highest number of Leprosy cases is India. It is not a fair comparison to look at the raw number of cases because different countries may have different means for controlling leprosy cases. Also, different countries may have different populations so we have to look at the rate of leprosy cases rather than the raw number.
+    ```
+
+2.  Create a new variable in the dataset that provides the leprosy cases per 100K people in each country. Graph this new variable’s distribution and provide the relevant summary statistics inline within a short paragraph describing the distribution.
+
+```{r}
+reduced_pop <- lep$Population / 100000
+rate_reduced_pop <- lep$New_Cases / reduced_pop
+boxplot(rate_reduced_pop,main='Boxplot of Leprosy Cases',ylab='Leprosy cases per 100K', pch=20, horizontal=TRUE)
+fivenum(rate_reduced_pop, na.rm=TRUE) # 0.0000000  0.0000000  0.1143411  1.0507863 29.6045152
+median(rate_reduced_pop, na.rm = TRUE) #0.11
+IQR(rate_reduced_pop, na.rm = TRUE) #1.04
+lep$pop_reducedrate <- rate_reduced_pop
+#This is a right skewed distribution with a median of 0.11 and an IQR of 1.04. Its lower quartile is 0, and its upper quartile is 0.05.
+```
+
+3.  We want to compare cases per 100K across the different regions in this dataset.  In a single plot output, create a graph that shows the distribution of cases per 100K split by region. Output a nicely formatted table that provides the region name, number of countries in that region, and the median cases per 100K for each region. Include a short paragraph summarizing differences in leprosy prevalence across regions.
+
+    ```{r}
+    mytable <- aggregate(pop_reducedrate~Region, data=lep, median)
+    country_table <- table(lep$Region)
+    combined_table <- data.frame(mytable$Region, mytable$pop_reducedrate, country_table)
+
+    colnames(combined_table) <- c('Region','Reduced Rate', 'Number of Countries')
+    kable_classic(kbl(combined_table,caption = "Cases per region"),full_width = FALSE)
+
+    #There is a much higher frequency of leprosy cases in Africa (0.9) than there is in the other countries. The region with the lowest frequency of leprosy cases is Europe, with none at all.
+    ```
+
+<!-- -->
+
+4.  Investigate the relationship between cases per 100K and one of the other variables in the dataset (other than region) by making the appropriate bivariate graph and providing the relevant summary statistic inline within a short paragraph describing the relationship.
+
+```{r}
+plot(lep$pop_reducedrate,lep$Land_Area,main='Leprosy rate per region & Land Area',xlab='Leprosy Rate',ylab='Land Area',pch=20)
+```
