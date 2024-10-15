@@ -36,6 +36,7 @@ lep$pop_reducedrate <- rate_reduced_pop
     kable_classic(kbl(combined_table,caption = "Cases per region"),full_width = FALSE)
 
     #There is a much higher frequency of leprosy cases in Africa (0.9) than there is in the other countries. The region with the lowest frequency of leprosy cases is Europe, with none at all.
+    #WHATSUP
     ```
 
 <!-- -->
